@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
     // Calculate data length and create data buffer
 	uint16_t datalen = packet_size - ( sizeof(struct ip) + sizeof(struct udphdr)); // sizeof() will always be 20 & 8 respectively.
 	unsigned char data[datalen];
-	memset(data, (int) 0, (size_t) datalen);
+	memset(data, (int) 0xab, (size_t) datalen);
     if(packet_size < sizeof(struct ip) + sizeof(struct udphdr) + 1) {
         fprintf(stderr, "ERROR: packet_size must be >= 29\n");
         return -1;
@@ -81,6 +81,7 @@ int main(int argc, char** argv) {
 	memset(datagram, (int) 0, (size_t) datagram_size);
 	memcpy(datagram, &ip_header, sizeof(struct ip));
 	memcpy(datagram+sizeof(struct ip), &udp_header, sizeof(struct udphdr));
+	memcpy(datagram+sizeof(struct ip)+sizeof(struct udphdr), data, datalen);
 
     // sendto() destination 
 	struct sockaddr_in destaddr;
